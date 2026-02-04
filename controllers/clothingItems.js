@@ -14,38 +14,40 @@ const getClothingItems = (req, res) => {
 };
 
 const createClothingItem = (req, res) => {
-  const { name, imageUrl, weatherType, owner, likes, createdAt } = req.body;
+  const { name, imageUrl, weatherType } = req.body;
+  console.log(req.user._id);
 
   Item.create({
     name,
     imageUrl,
     weatherType,
     owner: req.user._id,
-    likes,
-    createdAt,
-  }).then((item) => {
-    res
-      .status(201)
-      .send(item)
-      .catch((err) => {
-        console.error(err);
-        if (err.name === "ValidationError") {
-          return res.status(ERROR_400).send({ message: err.message });
-        }
-        return res.status(ERROR_500).send({ message: err.message });
-      });
-  });
+  })
+    .then((item) => {
+      res.status(201).send(item);
+    })
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "ValidationError") {
+        return res.status(ERROR_400).send({ message: err.message });
+      }
+      return res.status(ERROR_500).send({ message: err.message });
+    });
 };
 
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
   Item.findByIdAndDelete(itemId)
     .orFail()
-    .then((item) => {
-      if (!item) {
-        return res
-          .status(ERROR_404)
-          .send({ message: "Clothing item not found" });
+    .then(() => {
+      return res
+        .status(200)
+        .send({ message: "Clothing item deleted successfully" });
+    })
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "Clothing item not found") {
+        return res.status(ERROR_404).send({ message: err.message });
       }
       return res.status(ERROR_500).send({ message: err.message });
     });
