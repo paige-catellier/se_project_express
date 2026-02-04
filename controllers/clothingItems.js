@@ -40,9 +40,7 @@ const deleteClothingItem = (req, res) => {
   Item.findByIdAndDelete(itemId)
     .orFail()
     .then(() => {
-      return res
-        .status(200)
-        .send({ message: "Clothing item deleted successfully" });
+      res.status(200).send({ message: "Clothing item deleted successfully" });
     })
     .catch((err) => {
       console.error(err);
@@ -54,8 +52,8 @@ const deleteClothingItem = (req, res) => {
 };
 
 const likeClothingItem = (req, res) => {
-  const userId = req.user._id;
-  const itemId = req.params.itemId;
+  const { _id: userId } = req.user;
+  const { itemId } = req.params;
 
   Item.findByIdAndUpdate(
     itemId,
@@ -68,7 +66,6 @@ const likeClothingItem = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      rror;
       if (err.name === "Clothing item not found") {
         return res.status(ERROR_404).send({ message: err.message });
       }
@@ -77,8 +74,8 @@ const likeClothingItem = (req, res) => {
 };
 
 const unlikeClothingItem = (req, res) => {
-  const userId = req.user._id;
-  const itemId = req.params.itemId;
+  const { _id: userId } = req.user;
+  const { itemId } = req.params;
 
   Item.findByIdAndDelete(itemId, { $pull: { likes: userId } }, { new: true })
     .orFail()
