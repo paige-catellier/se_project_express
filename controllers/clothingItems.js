@@ -38,12 +38,14 @@ const deleteClothingItem = (req, res) => {
       if (!item) {
         return res.status(404).send({ message: "Clothing item not found" });
       }
-      return res.staus(500).send({ message: err.message });
+      return res.status(500).send({ message: err.message });
     });
 };
 
 module.exports = {
   getClothingItems,
-  createClothingItem,
   deleteClothingItem,
+};
+module.exports.createClothingItem = (req, res) => {
+  console.log(req.user._id);
 };
