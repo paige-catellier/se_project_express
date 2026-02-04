@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const { ERROR_400, ERROR_404, ERROR_500 } = require("../utils/errors");
 
 const getUsers = (req, res) => {
   User.find({})
@@ -6,7 +7,7 @@ const getUsers = (req, res) => {
     .catch((err) => {
       console.error(err);
       return res
-        .status(500)
+        .status(ERROR_500)
         .send({ message: "An error occurred on the server" });
     });
 };
@@ -21,9 +22,9 @@ const createUser = (req, res) => {
       .catch((err) => {
         console.error(err);
         if (err.name === "ValidationError") {
-          return res.status(400).send({ message: err.message });
+          return res.status(ERROR_400).send({ message: err.message });
         }
-        return res.status(500).send({ message: err.message });
+        return res.status(ERROR_500).send({ message: err.message });
       });
   });
 };
@@ -34,9 +35,9 @@ const getUser = (req, res) => {
     .orFail()
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: "User not found" });
+        return res.status(ERROR_404).send({ message: "User not found" });
       }
-      return res.staus(500).send({ message: err.message });
+      return res.staus(ERROR_500).send({ message: err.message });
     });
 };
 
