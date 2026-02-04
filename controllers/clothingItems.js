@@ -3,7 +3,6 @@ const { ERROR_400, ERROR_404, ERROR_500 } = require("../utils/errors");
 
 const getClothingItems = (req, res) => {
   Item.find({})
-    .orFail()
     .then((items) => res.send(items))
     .catch((err) => {
       console.error(err);
@@ -14,13 +13,13 @@ const getClothingItems = (req, res) => {
 };
 
 const createClothingItem = (req, res) => {
-  const { name, imageUrl, weatherType } = req.body;
+  const { name, imageUrl, weather } = req.body;
   console.log(req.user._id);
 
   Item.create({
     name,
     imageUrl,
-    weatherType,
+    weather,
     owner: req.user._id,
   })
     .then((item) => {
@@ -31,7 +30,9 @@ const createClothingItem = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(ERROR_400).send({ message: err.message });
       }
-      return res.status(ERROR_500).send({ message: err.message });
+      return res
+        .status(ERROR_500)
+        .send({ message: "An error occurred on the server" });
     });
 };
 
@@ -44,10 +45,12 @@ const deleteClothingItem = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      if (err.name === "Clothing item not found") {
+      if (err.name === "DocumentNotFoundError") {
         return res.status(ERROR_404).send({ message: err.message });
       }
-      return res.status(ERROR_500).send({ message: err.message });
+      return res
+        .status(ERROR_500)
+        .send({ message: "An error occurred on the server" });
     });
 };
 
@@ -66,10 +69,12 @@ const likeClothingItem = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      if (err.name === "Clothing item not found") {
+      if (err.name === "DocumentNotFoundError") {
         return res.status(ERROR_404).send({ message: err.message });
       }
-      return res.status(ERROR_500).send({ message: err.message });
+      return res
+        .status(ERROR_500)
+        .send({ message: "An error occurred on the server" });
     });
 };
 
@@ -77,14 +82,14 @@ const unlikeClothingItem = (req, res) => {
   const { _id: userId } = req.user;
   const { itemId } = req.params;
 
-  Item.findByIdAndDelete(itemId, { $pull: { likes: userId } }, { new: true })
+  Item.findByIdAndUpdate(itemId, { $pull: { likes: userId } }, { new: true })
     .orFail()
     .then((updatedItem) => {
       res.send(updatedItem);
     })
     .catch((err) => {
       console.error(err);
-      if (err.name === "Clothing item not found") {
+      if (err.name === "DocumentNotFoundError") {
         return res.status(ERROR_404).send({ message: err.message });
       }
       return res.status(ERROR_500).send({ message: err.message });

@@ -15,18 +15,17 @@ const getUsers = (req, res) => {
 const createUser = (req, res) => {
   const { name, avatar } = req.body;
 
-  User.create({ name, avatar }).then((user) => {
-    res
-      .status(201)
-      .send(user)
-      .catch((err) => {
-        console.error(err);
-        if (err.name === "ValidationError") {
-          return res.status(ERROR_400).send({ message: err.message });
-        }
-        return res.status(ERROR_500).send({ message: err.message });
-      });
-  });
+  User.create({ name, avatar })
+    .then((user) => {
+      res.status(201).send(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "ValidationError") {
+        return res.status(ERROR_400).send({ message: err.message });
+      }
+      return res.status(ERROR_500).send({ message: err.message });
+    });
 };
 
 const getUser = (req, res) => {
@@ -37,11 +36,10 @@ const getUser = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(ERROR_404).send({ message: "User not found" });
       }
-      return res.staus(ERROR_500).send({ message: err.message });
+      return res.status(ERROR_500).send({ message: err.message });
     });
 };
 

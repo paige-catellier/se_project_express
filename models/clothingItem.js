@@ -18,7 +18,7 @@ const clothingItemSchema = new mongoose.Schema({
       message: "You must enter a valid URL.",
     },
   },
-  weatherType: {
+  weather: {
     type: String,
     required: true,
     enum: ["hot", "warm", "cold"],

@@ -12,14 +12,15 @@ mongoose
   })
   .catch(console.error);
 
-app.use(express.json());
-app.use("/", indexRouter);
 app.use((req, res, next) => {
   req.user = {
     _id: "6982843ff4c7a27ed02197d5",
   };
   next();
 });
+
+app.use(express.json());
+app.use("/", indexRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
