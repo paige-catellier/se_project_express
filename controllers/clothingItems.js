@@ -28,7 +28,9 @@ const createClothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(ERROR_400).send({ message: err.message });
+        return res
+          .status(ERROR_400)
+          .send({ message: "An error occurred on the server" });
       }
       return res
         .status(ERROR_500)
@@ -41,12 +43,15 @@ const deleteClothingItem = (req, res) => {
   Item.findByIdAndDelete(itemId)
     .orFail()
     .then(() => {
-      res.status(200).send({ message: "Clothing item deleted successfully" });
+      res.status().send({ message: "Clothing item deleted successfully" });
     })
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(ERROR_404).send({ message: err.message });
+      }
+      if (err.name === "CastError") {
+        return res.status(ERROR_400).send({ message: "Invalid data" });
       }
       return res
         .status(ERROR_500)
@@ -72,6 +77,9 @@ const likeClothingItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(ERROR_404).send({ message: err.message });
       }
+      if (err.name === "CastError") {
+        return res.status(ERROR_400).send({ message: "Invalid data" });
+      }
       return res
         .status(ERROR_500)
         .send({ message: "An error occurred on the server" });
@@ -91,6 +99,9 @@ const unlikeClothingItem = (req, res) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(ERROR_404).send({ message: err.message });
+      }
+      if (err.name === "CastError") {
+        return res.status(ERROR_400).send({ message: "Invalid data" });
       }
       return res.status(ERROR_500).send({ message: err.message });
     });
