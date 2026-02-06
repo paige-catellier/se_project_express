@@ -22,9 +22,11 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(ERROR_400).send({ message: err.message });
+        return res.status(ERROR_400).send({ message: "Inavlid data" });
       }
-      return res.status(ERROR_500).send({ message: err.message });
+      return res
+        .status(ERROR_500)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -42,7 +44,9 @@ const getUser = (req, res) => {
       if (err.name === "CastError") {
         return res.status(ERROR_400).send({ message: "Invalid data" });
       }
-      return res.status(ERROR_500).send({ message: err.message });
+      return res
+        .status(ERROR_500)
+        .send({ message: "An error had occurred on the server" });
     });
 };
 

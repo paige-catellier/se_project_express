@@ -48,7 +48,7 @@ const deleteClothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(ERROR_404).send({ message: err.message });
+        return res.status(ERROR_404).send({ message: "Item not found" });
       }
       if (err.name === "CastError") {
         return res.status(ERROR_400).send({ message: "Invalid data" });
@@ -75,7 +75,7 @@ const likeClothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(ERROR_404).send({ message: err.message });
+        return res.status(ERROR_404).send({ message: "Item not found" });
       }
       if (err.name === "CastError") {
         return res.status(ERROR_400).send({ message: "Invalid data" });
@@ -98,12 +98,14 @@ const unlikeClothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(ERROR_404).send({ message: err.message });
+        return res.status(ERROR_404).send({ message: "Item not found" });
       }
       if (err.name === "CastError") {
         return res.status(ERROR_400).send({ message: "Invalid data" });
       }
-      return res.status(ERROR_500).send({ message: err.message });
+      return res
+        .status(ERROR_500)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
