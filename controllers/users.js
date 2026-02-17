@@ -1,5 +1,7 @@
 const User = require("../models/user");
 const { ERROR_400, ERROR_404, ERROR_500 } = require("../utils/errors");
+const bcrypt = require("bcryptjs");
+const { JWT_SECRET } = require("../utils/config");
 
 const getUsers = (req, res) => {
   User.find({})
@@ -12,12 +14,19 @@ const getUsers = (req, res) => {
     });
 };
 
-const createUser = (req, res) => {
+const createUser = async (req, res) => {
   const { name, avatar } = req.body;
+  const { email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  User.create({ name, avatar })
+  User.create({ name, avatar, email, password: hashedPassword })
     .then((user) => {
       res.status(201).send(user);
+    })
+    .catch((err) => {
+      if (err.code === 11000) {
+        return res.status(ERROR_409).send({ message: "Email already exists" });
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -50,8 +59,27 @@ const getUser = (req, res) => {
     });
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.send({ token });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res
+        .status(ERROR_401)
+        .send({ message: "Incorrect email or password" });
+    });
+};
+
 module.exports = {
   getUsers,
   createUser,
   getUser,
+  login,
 };
