@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const {
   ERROR_400,
@@ -6,9 +8,7 @@ const {
   ERROR_500,
   ERROR_409,
 } = require("../utils/errors");
-const bcrypt = require("bcrypt");
 const { JWT_SECRET } = require("../utils/config");
-const jwt = require("jsonwebtoken");
 
 const createUser = async (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
     const userWithoutPassword = user.toObject();
     delete userWithoutPassword.password;
 
-    res.status(201).send(userWithoutPassword);
+    return res.status(201).send(userWithoutPassword);
   } catch (err) {
     if (err.code === 11000) {
       return res.status(ERROR_409).send({ message: "Email already exists" });

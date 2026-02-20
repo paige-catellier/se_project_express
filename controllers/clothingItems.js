@@ -1,5 +1,10 @@
 const Item = require("../models/clothingItem");
-const { ERROR_400, ERROR_404, ERROR_500 } = require("../utils/errors");
+const {
+  ERROR_400,
+  ERROR_404,
+  ERROR_403,
+  ERROR_500,
+} = require("../utils/errors");
 
 const getClothingItems = (req, res) => {
   Item.find({})
