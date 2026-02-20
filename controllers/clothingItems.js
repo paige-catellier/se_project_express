@@ -53,10 +53,10 @@ const deleteClothingItem = (req, res) => {
           .status(ERROR_403)
           .send({ message: "You do not have permission to delete this item" });
       }
-      Item.findByIdAndDelete(itemId)
+      return Item.findByIdAndDelete(itemId)
         .orFail()
         .then(() => {
-          return res
+          res
             .status(200)
             .send({ message: "Clothing item deleted successfully" });
         });
