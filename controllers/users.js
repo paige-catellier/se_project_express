@@ -8,6 +8,7 @@ const {
 } = require("../utils/errors");
 const bcrypt = require("bcrypt");
 const { JWT_SECRET } = require("../utils/config");
+const jwt = require("jsonwebtoken");
 
 const createUser = async (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -60,7 +61,7 @@ const getCurrentUser = (req, res) => {
     });
 };
 
-const login = (req, res) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
