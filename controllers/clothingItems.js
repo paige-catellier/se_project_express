@@ -56,7 +56,7 @@ const deleteClothingItem = (req, res) => {
       Item.findByIdAndDelete(itemId)
         .orFail()
         .then(() => {
-          res
+          return res
             .status(200)
             .send({ message: "Clothing item deleted successfully" });
         });
