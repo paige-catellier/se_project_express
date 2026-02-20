@@ -1,32 +1,43 @@
 const User = require("../models/user");
-const { ERROR_400, ERROR_404, ERROR_500 } = require("../utils/errors");
+const {
+  ERROR_400,
+  ERROR_401,
+  ERROR_404,
+  ERROR_500,
+  ERROR_409,
+} = require("../utils/errors");
 const bcrypt = require("bcrypt");
 const { JWT_SECRET } = require("../utils/config");
 
 const createUser = async (req, res) => {
-  const { name, avatar } = req.body;
-  const { email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const { name, avatar, email, password } = req.body;
 
-  User.create({ name, avatar, email, password: hashedPassword })
-    .then((user) => {
-      delete user.password;
-      res.status(201).send(user);
-    })
-    .catch((err) => {
-      if (err.code === 11000) {
-        return res.status(ERROR_409).send({ message: "Email already exists" });
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      if (err.name === "ValidationError") {
-        return res.status(ERROR_400).send({ message: "Inavlid data" });
-      }
-      return res
-        .status(ERROR_500)
-        .send({ message: "An error has occurred on the server" });
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      name,
+      avatar,
+      email,
+      password: hashedPassword,
     });
+
+    const userWithoutPassword = user.toObject();
+    delete userWithoutPassword.password;
+
+    res.status(201).send(userWithoutPassword);
+  } catch (err) {
+    if (err.code === 11000) {
+      return res.status(ERROR_409).send({ message: "Email already exists" });
+    }
+    if (err.name === "ValidationError") {
+      return res.status(ERROR_400).send({ message: "Invalid data" });
+    }
+    console.error(err);
+    return res
+      .status(ERROR_500)
+      .send({ message: "An error has occurred on the server" });
+  }
 };
 
 const getCurrentUser = (req, res) => {

@@ -5,7 +5,13 @@ const {
   login,
   updateProfile,
 } = require("../controllers/users");
-const { getClothingItems } = require("../controllers/clothingItems");
+const {
+  getClothingItems,
+  createClothingItem,
+  deleteClothingItem,
+  likeClothingItem,
+  unlikeClothingItem,
+} = require("../controllers/clothingItems");
 const auth = require("../middlewares/auth");
 
 router.post("/signup", createUser);
