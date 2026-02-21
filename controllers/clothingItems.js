@@ -32,7 +32,7 @@ const createClothingItem = (req, res) => {
     owner: req.user._id,
   })
     .then((item) => {
-      res.status(201).send(item);
+      return res.status(201).send(item);
     })
     .catch((err) => {
       console.error(err);
