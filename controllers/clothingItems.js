@@ -1,6 +1,7 @@
 const Item = require("../models/clothingItem");
 const {
   ERROR_400,
+  ERROR_401,
   ERROR_404,
   ERROR_403,
   ERROR_500,
@@ -18,6 +19,9 @@ const getClothingItems = (req, res) => {
 };
 
 const createClothingItem = (req, res) => {
+  if (!req.user) {
+    return res.status(ERROR_401).send({ message: "Authorization required" });
+  }
   const { name, imageUrl, weather } = req.body;
   console.log(req.user._id);
 
@@ -33,9 +37,7 @@ const createClothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res
-          .status(ERROR_400)
-          .send({ message: "An error occurred on the server" });
+        return res.status(ERROR_400).send({ message: "Invalid data" });
       }
       return res
         .status(ERROR_500)

@@ -42,7 +42,7 @@ const createUser = async (req, res) => {
 };
 
 const getCurrentUser = (req, res) => {
-  const { userId } = req.user;
+  const { userId } = req.user._id;
   User.findById(userId)
     .orFail()
     .then((user) => {
@@ -72,10 +72,15 @@ const login = async (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
+      if (err.message === "Incorrect email or password") {
+        return res
+          .status(ERROR_401)
+          .send({ message: "Incorrect email or password" });
+      }
       console.error(err);
       return res
-        .status(ERROR_401)
-        .send({ message: "Incorrect email or password" });
+        .status(ERROR_500)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
