@@ -23,7 +23,6 @@ const createClothingItem = (req, res) => {
     return res.status(ERROR_401).send({ message: "Authorization required" });
   }
   const { name, imageUrl, weather } = req.body;
-  console.log(req.user._id);
 
   Item.create({
     name,
@@ -57,10 +56,8 @@ const deleteClothingItem = (req, res) => {
       }
       return Item.findByIdAndDelete(itemId)
         .orFail()
-        .then(() => {
-          res
-            .status(200)
-            .send({ message: "Clothing item deleted successfully" });
+        .then((item) => {
+          res.status(200).send(item);
         });
     })
     .catch((err) => {

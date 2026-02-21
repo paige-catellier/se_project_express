@@ -13,6 +13,12 @@ const { JWT_SECRET } = require("../utils/config");
 const createUser = async (req, res) => {
   const { name, avatar, email, password } = req.body;
 
+  if (!email || !password) {
+    return res
+      .status(ERROR_400)
+      .send({ message: "Email and password are required" });
+  }
+
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -42,8 +48,7 @@ const createUser = async (req, res) => {
 };
 
 const getCurrentUser = (req, res) => {
-  const { userId } = req.user._id;
-  User.findById(userId)
+  User.findById(req.user._id)
     .orFail()
     .then((user) => {
       res.send(user);
