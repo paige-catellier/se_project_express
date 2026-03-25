@@ -4,6 +4,9 @@ const rateLimit = require("express-rate-limit");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const indexRouter = require("./routes/index");
+const errorHandler = require("./middlewares/error-handler");
+const { errors } = require("celebrate");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -22,7 +25,11 @@ mongoose
 
 app.use(cors());
 app.use(express.json());
+app.use(requestLogger);
 app.use("/", indexRouter);
+app.use(errorLogger);
+app.use(errors());
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

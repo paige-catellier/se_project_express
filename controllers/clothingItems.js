@@ -1,26 +1,21 @@
 const Item = require("../models/clothingItem");
-const {
-  ERROR_400,
-  ERROR_401,
-  ERROR_404,
-  ERROR_403,
-  ERROR_500,
-} = require("../utils/errors");
+const NotFoundError = require("../errors/not-found-err");
+const BadRequestError = require("../errors/bad-request-err");
+const UnauthorizedError = require("../errors/unathorized-err");
+const ForbiddenError = require("../errors/forbidden-err");
 
-const getClothingItems = (req, res) => {
+const getClothingItems = (_req, res, next) => {
   Item.find({})
     .then((items) => res.send(items))
     .catch((err) => {
       console.error(err);
-      return res
-        .status(ERROR_500)
-        .send({ message: "An error occurred on the server" });
+      return next(err);
     });
 };
 
-const createClothingItem = (req, res) => {
+const createClothingItem = (req, res, next) => {
   if (!req.user) {
-    return res.status(ERROR_401).send({ message: "Authorization required" });
+    return next(new UnauthorizedError("Authorization required"));
   }
   const { name, imageUrl, weather } = req.body;
 
@@ -36,23 +31,21 @@ const createClothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(ERROR_400).send({ message: "Invalid data" });
+        return next(new BadRequestError("Invalid data"));
       }
-      return res
-        .status(ERROR_500)
-        .send({ message: "An error occurred on the server" });
+      return next(err);
     });
 };
 
-const deleteClothingItem = (req, res) => {
+const deleteClothingItem = (req, res, next) => {
   const { itemId } = req.params;
   Item.findById(itemId)
     .orFail()
     .then((item) => {
       if (item.owner.toString() !== req.user._id) {
-        return res
-          .status(ERROR_403)
-          .send({ message: "You do not have permission to delete this item" });
+        return next(
+          new ForbiddenError("You do not have permission to delete this item")
+        );
       }
       return Item.findByIdAndDelete(itemId)
         .orFail()
@@ -63,14 +56,12 @@ const deleteClothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(ERROR_404).send({ message: "Item not found" });
+        return next(new NotFoundError("Item not found"));
       }
       if (err.name === "CastError") {
-        return res.status(ERROR_400).send({ message: "Invalid data" });
+        return next(new BadRequestError("Invalid data"));
       }
-      return res
-        .status(ERROR_500)
-        .send({ message: "An error occurred on the server" });
+      return next(err);
     });
 };
 
@@ -90,14 +81,12 @@ const likeClothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(ERROR_404).send({ message: "Item not found" });
+        return next(new NotFoundError("Item not found"));
       }
       if (err.name === "CastError") {
-        return res.status(ERROR_400).send({ message: "Invalid data" });
+        return next(new BadRequestError("Invalid data"));
       }
-      return res
-        .status(ERROR_500)
-        .send({ message: "An error occurred on the server" });
+      return next(err);
     });
 };
 
@@ -113,14 +102,12 @@ const unlikeClothingItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(ERROR_404).send({ message: "Item not found" });
+        return next(new NotFoundError("Itemm not found"));
       }
       if (err.name === "CastError") {
-        return res.status(ERROR_400).send({ message: "Invalid data" });
+        return next(new BadRequestError("Invalid data"));
       }
-      return res
-        .status(ERROR_500)
-        .send({ message: "An error has occurred on the server" });
+      return next(err);
     });
 };
 
