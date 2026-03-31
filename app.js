@@ -27,6 +27,15 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
+
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
+
+//remove crash-test after review//
+
 app.use("/", indexRouter);
 app.use(errorLogger);
 app.use(errors());
