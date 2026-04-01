@@ -8,6 +8,10 @@ Technologies used:
 -Prettier
 -Nodemon
 
-# Link to React: Front End
+# Links:
 
 -https://github.com/paige-catellier/se_project_react
+
+-http://wtwrproject.crabdance.com/items
+
+-http://api.wtwrproject.crabdance.com/items
