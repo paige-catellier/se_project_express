@@ -12,6 +12,6 @@ Technologies used:
 
 -https://github.com/paige-catellier/se_project_react
 
--http://wtwrproject.crabdance.com/items
+-http://wtwrproject.crabdance.com/
 
--http://api.wtwrproject.crabdance.com/items
+-http://api.wtwrproject.crabdance.com/
