@@ -19,14 +19,14 @@ const createClothingItem = (req, res, next) => {
   }
   const { name, imageUrl, weather } = req.body;
 
-  Item.create({
+  return Item.create({
     name,
     imageUrl,
     weather,
     owner: req.user._id,
   })
     .then((item) => {
-      return res.status(201).send(item);
+      res.status(201).send(item);
     })
     .catch((err) => {
       console.error(err);
@@ -49,8 +49,8 @@ const deleteClothingItem = (req, res, next) => {
       }
       return Item.findByIdAndDelete(itemId)
         .orFail()
-        .then((item) => {
-          res.status(200).send(item);
+        .then((deletedItem) => {
+          res.status(200).send(deletedItem);
         });
     })
     .catch((err) => {
@@ -65,7 +65,7 @@ const deleteClothingItem = (req, res, next) => {
     });
 };
 
-const likeClothingItem = (req, res) => {
+const likeClothingItem = (req, res, next) => {
   const { _id: userId } = req.user;
   const { itemId } = req.params;
 
@@ -90,7 +90,7 @@ const likeClothingItem = (req, res) => {
     });
 };
 
-const unlikeClothingItem = (req, res) => {
+const unlikeClothingItem = (req, res, next) => {
   const { _id: userId } = req.user;
   const { itemId } = req.params;
 

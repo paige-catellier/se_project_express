@@ -45,7 +45,7 @@ const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail()
     .then((user) => {
-      return res.send(user);
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
