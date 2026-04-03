@@ -1,17 +1,12 @@
 # WTWR (What to Wear?): Back End
 
-Technologies used:
--Express
--MongoDB
--Mongoose
--ESLint
--Prettier
--Nodemon
+This project provides the user with their local weather and the recommended articles of clothing to wear.
+This project utilizes Express, MongoDB, Mongoose, ESLint, Prettier, Nodemon.
 
 # Links:
 
--https://github.com/paige-catellier/se_project_react
+GitHub React: https://github.com/paige-catellier/se_project_react
 
--http://wtwrproject.crabdance.com/
+WTWR Project: http://wtwrproject.crabdance.com/
 
--http://api.wtwrproject.crabdance.com/
+WTWR Project API: http://api.wtwrproject.crabdance.com/
