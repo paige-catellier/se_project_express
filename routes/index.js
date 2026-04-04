@@ -16,7 +16,7 @@ router.use("/items", itemRouter);
 router.use("/users", userRouter);
 
 router.use((_req, _res, next) => {
-  return next(new NotFoundError("Requested resource not found"));
+  next(new NotFoundError("Requested resource not found"));
 });
 
 module.exports = router;
