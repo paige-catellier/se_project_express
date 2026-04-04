@@ -5,9 +5,9 @@ This project utilizes Express, MongoDB, Mongoose, ESLint, Prettier, Nodemon.
 
 # Links:
 
-Project Video Pitch: https://drive.google.com/file/d/14ByaEzAmk6D2r8dzqZjKtwQFxrFjyFLw/view?usp=sharing
+Project 15 Video Pitch: https://drive.google.com/file/d/14ByaEzAmk6D2r8dzqZjKtwQFxrFjyFLw/view?usp=sharing
 
-GitHub React: https://github.com/paige-catellier/se_project_react
+GitHub React - Frontend: https://github.com/paige-catellier/se_project_react
 
 WTWR Project: http://wtwrproject.crabdance.com/
 
